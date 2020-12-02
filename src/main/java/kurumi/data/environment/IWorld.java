@@ -3,6 +3,8 @@ package kurumi.data.environment;
 import kurumi.data.component.Coordinate;
 import kurumi.data.component.SimpleFixedRenderer;
 
+import java.util.Set;
+
 /**
  * Implemented by World Data Providers.
  */
@@ -25,7 +27,7 @@ public interface IWorld {
      * @param id cube id
      * @return component types registered for this cube id
      */
-    byte[] getComponentsForId(int id);
+    Set<Byte> getComponentsForId(long id);
 
     /**
      * Get all cube ids that have the specified component type registered.
@@ -34,7 +36,7 @@ public interface IWorld {
      * @param scope         search area limit
      * @return all cube ids with this component
      */
-    long[] getIdsForComponent(byte componentType, Scope scope);
+    Set<Long> getIdsForComponent(byte componentType, Scope scope);
 
     // COMPONENT METHODS ===============================================================================================
 
@@ -48,7 +50,7 @@ public interface IWorld {
      * @param z z coordinate
      * @return unique cube id
      */
-    long getBlockIdAt(int x, int y, int z);
+    long getCubeIdAt(int x, int y, int z);
 
     /**
      * Get the unique cube id for the specified coordinate.
@@ -56,7 +58,17 @@ public interface IWorld {
      * @param coordinate coordinate
      * @return unique cube id
      */
-    long getBlockIdAt(Coordinate coordinate);
+    long getCubeIdAt(Coordinate coordinate);
+
+    /**
+     * Add a new cube at the specified coordinate.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @return unique cube id of the newly generated block, or {@code -1} if cube creation failed
+     */
+    long addCubeAt(int x, int y, int z);
 
     /**
      * Get all cube ids with a coordinate.
@@ -64,7 +76,7 @@ public interface IWorld {
      * @param scope search area limit
      * @return all cube ids with a coordinate
      */
-    long[] getIdsWithCoordinate(Scope scope);
+    Set<Long> getIdsWithCoordinate(Scope scope);
 
     /**
      * Get the coordinate for the specified cube id.
@@ -82,7 +94,7 @@ public interface IWorld {
      * @param scope search area limit
      * @return all cube ids with a simple fixed renderer
      */
-    long[] getIdsWithSimpleFixedRender(Scope scope);
+    Set<Long> getIdsWithSimpleFixedRender(Scope scope);
 
     /**
      * Get the simple fixed renderer for the specified cube id.
@@ -91,5 +103,14 @@ public interface IWorld {
      * @return rendering data
      */
     SimpleFixedRenderer getSimpleFixedRendererForId(long id);
+
+    /**
+     * Add a new simple fixed renderer to a cube id.
+     *
+     * @param id                  cube id
+     * @param simpleFixedRenderer component instance
+     * @return {@code true} if the component was added successfully
+     */
+    boolean addSimpleFixedRendererTo(long id, SimpleFixedRenderer simpleFixedRenderer);
 
 }
