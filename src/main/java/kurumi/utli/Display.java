@@ -14,7 +14,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Display {
 	
-	public final long window;
+	private final long window;
 
 	private int width;
 	private int height;
@@ -109,14 +109,21 @@ public class Display {
 
 		glfwShowWindow(window);
 
-		IntBuffer w = BufferUtils.createIntBuffer(1);
-		IntBuffer h = BufferUtils.createIntBuffer(1);
+		final IntBuffer w = BufferUtils.createIntBuffer(1);
+		final IntBuffer h = BufferUtils.createIntBuffer(1);
 		glfwGetWindowSize(window, w, h);
 		width = w.get(0);
 		height = h.get(0);
 
 		isInitialised = true;
 		return this;
+	}
+
+	public long getDisplayPointer() {
+		if (!isInitialised()) {
+			throw new IllegalStateException("Display not initialised!");
+		}
+		return window;
 	}
 
 	public int getWidth() {
