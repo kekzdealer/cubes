@@ -1,14 +1,16 @@
 package kurumi.data.environment;
 
+import kurumi.data.component.Coordinate;
+
 /**
  * Used to limit World Data Provider interactions to a specified area.
  */
 public final class Scope {
 
-    private int x;
-    private int y;
-    private int z;
-    private int radius;
+    private final int x;
+    private final int y;
+    private final int z;
+    private final int radius;
 
     public Scope(int x, int y, int z, int radius) {
         this.x = x;
@@ -17,35 +19,27 @@ public final class Scope {
         this.radius = radius;
     }
 
-    public int getX() {
-        return x;
+    public boolean contains(int x, int y, int z) {
+        return (x * x - this.x * this.x < 0) && (y * y - this.y * this.y < 0) && (z * z - this.z * this.z < 0);
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public boolean contains(Coordinate coordinate) {
+        return contains(coordinate.getX(), coordinate.getY(), coordinate.getZ());
+    }
+
+    public int getX() {
+        return x;
     }
 
     public int getY() {
         return y;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public int getZ() {
         return z;
     }
 
-    public void setZ(int z) {
-        this.z = z;
-    }
-
     public int getRadius() {
         return radius;
-    }
-
-    public void setRadius(int radius) {
-        this.radius = radius;
     }
 }
