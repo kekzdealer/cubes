@@ -23,6 +23,7 @@ public final class ClientStart extends Thread {
                 .setVisible(false)
                 .setWindowPosition(1, 20)
                 .finishSetup();
+
     }
 
     public static void main(String[] args) {
