@@ -6,16 +6,19 @@ import kurumi.data.environment.IWorld;
 import kurumi.data.environment.Scope;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public final class BoringWorldProvider implements IWorld {
+public final class DumbWorldProvider implements IWorld {
 
     private final Map<Long, Set<Byte>> componentMapping = new HashMap<>();
 
     private final Map<Long, Coordinate> coordinateMap = new HashMap<>();
     private final Map<Long, SimpleFixedRenderer> simpleFixedRendererMap = new HashMap<>();
+
+    private long nextCubeId;
 
     private boolean isInScope(long cubeId, Scope scope) {
         return scope.contains(coordinateMap.get(cubeId));
@@ -47,7 +50,34 @@ public final class BoringWorldProvider implements IWorld {
 
     @Override
     public long addCubeAt(int x, int y, int z) {
-        // TODO
+        // Make sure not to overwrite an existing cube
+        if(getCubeIdAt(x, y, z) != -1) {
+            return -1L;
+        } else {
+            final long newId = nextCubeId++;
+            // Add coordinate
+            coordinateMap.put(newId, new Coordinate(x, y, z));
+            // Initialize component mapping with a coordinate component
+            final Set<Byte> comps = new HashSet<>();
+            comps.add(IWorld.COORDINATE);
+            componentMapping.put(newId, comps);
+
+            return newId;
+        }
+    }
+
+    @Override
+    public long removeCubeAt(int x, int y, int z) {
+        final long cubeId = getCubeIdAt(x, y, z);
+        if(cubeId != -1L) {
+            // remove all associated components
+            removeSimpleFixedRendererFrom(cubeId);
+
+            coordinateMap.remove(cubeId);
+
+            componentMapping.remove(cubeId);
+        }
+        return cubeId;
     }
 
     @Override
@@ -72,6 +102,17 @@ public final class BoringWorldProvider implements IWorld {
 
     @Override
     public boolean addSimpleFixedRendererTo(long id, SimpleFixedRenderer simpleFixedRenderer) {
-        // TODO
+        if(!componentMapping.containsKey(id)) {
+            return false;
+        } else {
+            simpleFixedRendererMap.put(id, simpleFixedRenderer);
+            componentMapping.get(id).add(IWorld.SIMPLE_FIXED_RENDER);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean removeSimpleFixedRendererFrom(long id) {
+        return simpleFixedRendererMap.remove(id) != null; // TODO clean up render stuff here
     }
 }

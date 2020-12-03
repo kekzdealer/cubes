@@ -48,7 +48,7 @@ public interface IWorld {
      * @param x x coordinate
      * @param y y coordinate
      * @param z z coordinate
-     * @return unique cube id
+     * @return unique cube id, or {@code -1} if the coordinate is empty
      */
     long getCubeIdAt(int x, int y, int z);
 
@@ -56,7 +56,7 @@ public interface IWorld {
      * Get the unique cube id for the specified coordinate.
      *
      * @param coordinate coordinate
-     * @return unique cube id
+     * @return unique cube id, or {@code -1} if the coordinate is empty
      */
     long getCubeIdAt(Coordinate coordinate);
 
@@ -69,6 +69,16 @@ public interface IWorld {
      * @return unique cube id of the newly generated block, or {@code -1} if cube creation failed
      */
     long addCubeAt(int x, int y, int z);
+
+    /**
+     * Remove a cube at the specified coordinate.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @return the removed cube id, or {@code -1} if no cube was found
+     */
+    long removeCubeAt(int x, int y, int z);
 
     /**
      * Get all cube ids with a coordinate.
@@ -112,5 +122,13 @@ public interface IWorld {
      * @return {@code true} if the component was added successfully
      */
     boolean addSimpleFixedRendererTo(long id, SimpleFixedRenderer simpleFixedRenderer);
+
+    /**
+     * Remove the simple fixed renderer from a cube id.
+     *
+     * @param id cube id
+     * @return {@code true} if the component was removed successfully
+     */
+    boolean removeSimpleFixedRendererFrom(long id);
 
 }

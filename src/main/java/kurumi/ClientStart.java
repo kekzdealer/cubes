@@ -1,5 +1,8 @@
 package kurumi;
 
+import kurumi.data.EnvironmentGenerator;
+import kurumi.data.environment.IWorld;
+import kurumi.data.environment.worldprovider.DumbWorldProvider;
 import kurumi.utli.Display;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +17,8 @@ public final class ClientStart extends Thread {
 
     private final Display display;
 
+    private final IWorld world;
+
     private ClientStart() {
         display = new Display(1280, 720, "Cubes")
                 .setErrorPrint(System.err)
@@ -24,6 +29,8 @@ public final class ClientStart extends Thread {
                 .setWindowPosition(1, 20)
                 .finishSetup();
 
+        world = new DumbWorldProvider();
+        EnvironmentGenerator.generatePlane(world, 0, 1, 0, 10, 10);
     }
 
     public static void main(String[] args) {
