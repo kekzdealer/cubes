@@ -17,8 +17,9 @@ public abstract class ShaderProgram {
 
     private final int programID;
 
-    public ShaderProgram(String vertexFile, String fragmentFile) throws GraphicsException, IOException {
+    protected ShaderProgram(String vertexFile, String fragmentFile) throws GraphicsException, IOException {
         programID = buildShaderProgram("v_" + vertexFile, "f_" + fragmentFile);
+        getAllUniformLocations();
     }
 
     private int buildShaderProgram(String vShader, String fShader) throws GraphicsException, IOException {
