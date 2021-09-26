@@ -1,6 +1,6 @@
 package at.kurumi.data.resources;
 
-import at.kurumi.util.GraphicsException;
+import at.kurumi.graphics.GraphicsException;
 import org.joml.Matrix4fc;
 import org.joml.Vector2fc;
 import org.joml.Vector3fc;

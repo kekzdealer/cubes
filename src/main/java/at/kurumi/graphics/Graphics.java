@@ -1,8 +1,8 @@
-package at.kurumi;
+package at.kurumi.graphics;
 
 import at.kurumi.data.managers.Shaders;
-import at.kurumi.util.Display;
-import at.kurumi.util.GraphicsException;
+import at.kurumi.graphics.Display;
+import at.kurumi.graphics.GraphicsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;

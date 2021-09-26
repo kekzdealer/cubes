@@ -1,4 +1,4 @@
-package at.kurumi.util;
+package at.kurumi.graphics;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -153,7 +153,10 @@ public class Display {
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
 		glfwTerminate();
-		glfwSetErrorCallback(null).free();
+		final var glfwErrorCallback = glfwSetErrorCallback(null);
+		if(glfwErrorCallback != null) {
+			glfwErrorCallback.free();
+		}
 	}
 
 }

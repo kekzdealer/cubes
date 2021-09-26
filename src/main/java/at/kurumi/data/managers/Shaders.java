@@ -2,7 +2,7 @@ package at.kurumi.data.managers;
 
 import at.kurumi.data.resources.ShaderProgram;
 import at.kurumi.graphics.DefaultShader;
-import at.kurumi.util.GraphicsException;
+import at.kurumi.graphics.GraphicsException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package at.kurumi.util;
+package at.kurumi.graphics;
 
 /**
  * Signals that an Exception relating to OpenGL or something else in render code has occurred.

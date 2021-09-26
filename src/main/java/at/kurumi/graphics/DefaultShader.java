@@ -1,17 +1,22 @@
 package at.kurumi.graphics;
 
 import at.kurumi.data.resources.ShaderProgram;
-import at.kurumi.util.GraphicsException;
 import org.joml.Matrix4fc;
 
 import java.io.IOException;
 
+/**
+ * Default shader implementation. Is used as fallback if a registered shader can't be found.
+ * Only supports a diffuse map and basic transformation and projection.
+ *
+ * @see at.kurumi.data.managers.Shaders
+ */
 public class DefaultShader extends ShaderProgram {
 
     private static final String NAME = "default";
 
-    // Textures
     private int location_diffuseMap;
+
     private int location_transformation;
     private int location_projection;
 

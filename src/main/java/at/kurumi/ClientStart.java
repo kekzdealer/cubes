@@ -3,6 +3,7 @@ package at.kurumi;
 import at.kurumi.data.environment.EnvironmentGenerator;
 import at.kurumi.data.environment.IWorld;
 import at.kurumi.data.environment.worldprovider.DumbWorldProvider;
+import at.kurumi.graphics.Graphics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
