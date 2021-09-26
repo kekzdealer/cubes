@@ -1,9 +1,9 @@
-package kurumi.data.environment.worldprovider;
+package at.kurumi.data.environment.worldprovider;
 
-import kurumi.data.component.Coordinate;
-import kurumi.data.component.SimpleFixedRenderer;
-import kurumi.data.environment.IWorld;
-import kurumi.data.environment.Scope;
+import at.kurumi.data.component.Coordinate;
+import at.kurumi.data.component.SimpleFixedRenderer;
+import at.kurumi.data.environment.IWorld;
+import at.kurumi.data.environment.Scope;
 
 import java.util.HashMap;
 import java.util.HashSet;

@@ -1,6 +1,6 @@
-package kurumi.data;
+package at.kurumi.data;
 
-import kurumi.data.environment.IWorld;
+import at.kurumi.data.environment.IWorld;
 
 public class EnvironmentGenerator {
 

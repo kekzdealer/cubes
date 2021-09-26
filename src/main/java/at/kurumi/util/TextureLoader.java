@@ -1,4 +1,4 @@
-package kurumi.utli;
+package at.kurumi.util;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -12,8 +12,8 @@ import java.nio.IntBuffer;
 public class TextureLoader {
 
     /**
-     * Create and load a texture to VRAM that can be used as a fallback texture in case others fail to load.<br><br>
-     * The texture is a two by two grid in black and purple.
+     * Create and load a texture to VRAM that can be used as a fallback texture in case others fail to load.
+     * The texture is a 2x2 pixel grid in black and purple.
      * @return textureId of the created texture
      */
     public static int createFallbackTexture() {

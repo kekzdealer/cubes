@@ -1,4 +1,4 @@
-package kurumi.data.entity;
+package at.kurumi.data.entity;
 
 public class AnimationManager {
 }

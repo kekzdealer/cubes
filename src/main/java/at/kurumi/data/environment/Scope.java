@@ -1,6 +1,6 @@
-package kurumi.data.environment;
+package at.kurumi.data.environment;
 
-import kurumi.data.component.Coordinate;
+import at.kurumi.data.component.Coordinate;
 
 /**
  * Used to limit World Data Provider interactions to a specified area.

@@ -1,4 +1,4 @@
-package kurumi.utli;
+package at.kurumi.util;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;

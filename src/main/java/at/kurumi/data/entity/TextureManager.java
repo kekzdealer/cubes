@@ -1,4 +1,4 @@
-package kurumi.data.environment;
+package at.kurumi.data.entity;
 
 public class TextureManager {
 }

@@ -1,4 +1,4 @@
-package kurumi.data.component;
+package at.kurumi.data.component;
 
 public final class SimpleFixedRenderer {
 
