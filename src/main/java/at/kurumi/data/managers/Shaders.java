@@ -28,7 +28,7 @@ public class Shaders {
             final var shaderProgram = shaderClass.getConstructor().newInstance();
             shaderPrograms.put(name, shaderProgram);
         } catch (InvocationTargetException e) {
-            throw new GraphicsException("Failed to call shader program implementation constructor");
+            throw new GraphicsException(e.getCause());
         } catch (InstantiationException | IllegalAccessException e) {
             throw new GraphicsException("Could not access shader program implementation constructor");
         } catch (NoSuchMethodException e) {

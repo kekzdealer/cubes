@@ -14,20 +14,16 @@ public class Graphics implements Runnable {
 
     private static final Logger LOG = LogManager.getLogger("Graphics");
 
-    private final Display display;
+    private final int displayWidth;
+    private final int displayHeight;
+    private Display display;
 
     private Runnable onStopCallable;
     private int targetFrameTime = 1000;
 
-    public Graphics(int width, int height) {
-        display = new Display(width, height, "Cubes")
-                .setErrorPrint(System.err)
-                .setOGLVersion(3, 3)
-                .withCoreProfile()
-                .setResizable(false)
-                .setVisible(false)
-                .setWindowPosition(320, 180)
-                .finishSetup();
+    public Graphics(int displayWidth, int displayHeight) {
+        this.displayWidth = displayWidth;
+        this.displayHeight = displayHeight;
     }
 
     public void setOnStopCallback(Runnable onStopCallback) {
@@ -40,6 +36,14 @@ public class Graphics implements Runnable {
 
     @Override
     public void run() {
+        display = new Display(displayWidth, displayHeight, "Cubes")
+                .setErrorPrint(System.err)
+                .setOGLVersion(3, 3)
+                .withCoreProfile()
+                .setResizable(false)
+                .setVisible(false)
+                .setWindowPosition(320, 180)
+                .finishSetup();
         try {
             final var shaderManager = new Shaders();
 

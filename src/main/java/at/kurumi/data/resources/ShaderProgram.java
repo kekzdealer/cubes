@@ -25,12 +25,13 @@ public abstract class ShaderProgram {
     private static final String SHADER_LOC = "/shader/";
     private static final String VERTEX_SHADER_PREFIX = "v_";
     private static final String FRAGMENT_SHADER_PREFIX = "f_";
+    private static final String SHADER_FILE_EXTENSION = ".glsl";
 
     private final int programId;
 
     /**
      * Load and build a new shader program. GLSL source files must have the prefix {@code v_} or {@code f_} for
-     * their shader type in their file name.
+     * their shader type in their file name as well as have {@code .glsl} as file extension.
      *
      * @param vertexFile   vertex shader resource name
      * @param fragmentFile fragment shader resource name
@@ -39,8 +40,8 @@ public abstract class ShaderProgram {
      */
     protected ShaderProgram(String vertexFile, String fragmentFile) throws GraphicsException, IOException {
         programId = buildShaderProgram(
-                VERTEX_SHADER_PREFIX + vertexFile,
-                FRAGMENT_SHADER_PREFIX + fragmentFile);
+                VERTEX_SHADER_PREFIX + vertexFile + SHADER_FILE_EXTENSION,
+                FRAGMENT_SHADER_PREFIX + fragmentFile + SHADER_FILE_EXTENSION);
         getAllUniformLocations();
     }
 
