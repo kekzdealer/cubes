@@ -8,8 +8,10 @@ import org.joml.Vector4fc;
 import org.lwjgl.opengl.GL20C;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 public abstract class ShaderProgram {
@@ -45,11 +47,21 @@ public abstract class ShaderProgram {
 
     private String readShaderFile(String fileName) throws IOException {
         final var shaderLoc = String.format("%s%s", SHADER_LOC, fileName);
-        try (final var is = ShaderProgram.class.getResourceAsStream(shaderLoc);
-             final var isr = new InputStreamReader(is);
-             final var br = new BufferedReader(isr)) {
-            return br.lines()
-                    .collect(Collectors.joining(""));
+        try (final var is = ShaderProgram.class.getResourceAsStream(shaderLoc)) {
+            if(is == null) {
+                throw new IOException();
+            }
+            /*
+            By far the fastest way of reading all kinds of String lengths according to
+            https://stackoverflow.com/a/35446009
+             */
+            final var baos = new ByteArrayOutputStream();
+            final var buffer = new byte[1024];
+            for(int length; (length = is.read(buffer)) != -1;) {
+                baos.write(buffer, 0, length);
+            }
+
+            return baos.toString(StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new IOException("Error while reading shader file: " + fileName);
         }
