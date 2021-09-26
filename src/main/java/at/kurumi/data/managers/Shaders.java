@@ -1,13 +1,18 @@
-package at.kurumi.data.entity;
+package at.kurumi.data.managers;
 
+import at.kurumi.data.resources.ShaderProgram;
 import at.kurumi.graphics.DefaultShader;
-import at.kurumi.graphics.ShaderProgram;
 import at.kurumi.util.GraphicsException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manager class for {@link ShaderProgram} implementations.
+ *
+ * @see ShaderProgram
+ */
 public class Shaders {
 
     public static final String DEFAULT_SHADER_NAME = "default";

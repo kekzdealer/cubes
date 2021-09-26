@@ -1,4 +1,4 @@
-package at.kurumi.graphics;
+package at.kurumi.data.resources;
 
 import at.kurumi.util.GraphicsException;
 import org.joml.Matrix4fc;
@@ -11,6 +11,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * <h2>Represents a single shader program</h2>
+ * <p>
+ * Shader programs can consist of multiple shader parts, but they have to
+ * at least have a vertex and fragment shader.
+ * </p>
+ *
+ * @see at.kurumi.data.managers.Shaders
+ */
 public abstract class ShaderProgram {
 
     private static final String SHADER_LOC = "/shader/";
@@ -23,7 +32,7 @@ public abstract class ShaderProgram {
      * Load and build a new shader program. GLSL source files must have the prefix {@code v_} or {@code f_} for
      * their shader type in their file name.
      *
-     * @param vertexFile vertex shader resource name
+     * @param vertexFile   vertex shader resource name
      * @param fragmentFile fragment shader resource name
      * @throws IOException       thrown if an error occurred while reading the shader
      * @throws GraphicsException thrown if shader program creation fails
@@ -59,7 +68,7 @@ public abstract class ShaderProgram {
     private String readShaderFile(String fileName) throws IOException {
         final var shaderLoc = String.format("%s%s", SHADER_LOC, fileName);
         try (final var is = ShaderProgram.class.getResourceAsStream(shaderLoc)) {
-            if(is == null) {
+            if (is == null) {
                 throw new IOException();
             }
             /*
@@ -68,7 +77,7 @@ public abstract class ShaderProgram {
              */
             final var baos = new ByteArrayOutputStream();
             final var buffer = new byte[1024];
-            for(int length; (length = is.read(buffer)) != -1;) {
+            for (int length; (length = is.read(buffer)) != -1; ) {
                 baos.write(buffer, 0, length);
             }
 

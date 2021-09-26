@@ -1,5 +1,6 @@
-package at.kurumi.util;
+package at.kurumi.data.providers;
 
+import at.kurumi.data.resources.Texture;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL11C;
 import org.lwjgl.opengl.GL12C;
@@ -9,6 +10,11 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+/**
+ * Provider class for {@link Texture} objects.
+ * @see Texture
+ * @see at.kurumi.data.managers.Textures
+ */
 public class TextureLoader {
 
     /**

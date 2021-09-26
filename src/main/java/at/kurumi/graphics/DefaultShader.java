@@ -1,5 +1,6 @@
 package at.kurumi.graphics;
 
+import at.kurumi.data.resources.ShaderProgram;
 import at.kurumi.util.GraphicsException;
 import org.joml.Matrix4fc;
 

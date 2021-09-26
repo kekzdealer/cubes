@@ -1,6 +1,6 @@
 package at.kurumi;
 
-import at.kurumi.data.EnvironmentGenerator;
+import at.kurumi.data.environment.EnvironmentGenerator;
 import at.kurumi.data.environment.IWorld;
 import at.kurumi.data.environment.worldprovider.DumbWorldProvider;
 import org.apache.logging.log4j.LogManager;
