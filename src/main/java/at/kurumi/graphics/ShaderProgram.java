@@ -15,10 +15,10 @@ public abstract class ShaderProgram {
 
     private static final String SHADER_LOC = "/shader/";
 
-    private final int programID;
+    private final int programId;
 
     protected ShaderProgram(String vertexFile, String fragmentFile) throws GraphicsException, IOException {
-        programID = buildShaderProgram("v_" + vertexFile, "f_" + fragmentFile);
+        programId = buildShaderProgram("v_" + vertexFile, "f_" + fragmentFile);
         getAllUniformLocations();
     }
 
@@ -91,20 +91,24 @@ public abstract class ShaderProgram {
         return shaderId;
     }
 
+    public void deleteShader() {
+        GL20C.glDeleteProgram(programId);
+    }
+
     protected abstract void bindAttributes();
 
     protected abstract void getAllUniformLocations();
 
     protected int getUniformLocation(String uniformName) {
-        return GL20C.glGetUniformLocation(programID, uniformName);
+        return GL20C.glGetUniformLocation(programId, uniformName);
     }
 
     protected void bindAttribute(int attribute, String variableName) {
-        GL20C.glBindAttribLocation(programID, attribute, variableName);
+        GL20C.glBindAttribLocation(programId, attribute, variableName);
     }
 
     public void start() {
-        GL20C.glUseProgram(programID);
+        GL20C.glUseProgram(programId);
     }
 
     public void stop() {

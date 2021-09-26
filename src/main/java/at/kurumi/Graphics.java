@@ -1,6 +1,8 @@
 package at.kurumi;
 
+import at.kurumi.data.entity.Shaders;
 import at.kurumi.util.Display;
+import at.kurumi.util.GraphicsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -38,6 +40,17 @@ public class Graphics implements Runnable {
 
     @Override
     public void run() {
+        try {
+            final var shaderManager = new Shaders();
+
+            doRenderLoop(shaderManager);
+        } catch (GraphicsException e) {
+            LOG.error("Terminating on graphics error: {}", e.getMessage());
+        }
+
+    }
+
+    public void doRenderLoop(Shaders shaders) {
         double frameStart;
         while(!Thread.interrupted()) {
             frameStart = GLFW.glfwGetTime();
