@@ -51,7 +51,7 @@ public final class DumbWorldProvider implements IWorld {
     @Override
     public long addCubeAt(int x, int y, int z) {
         // Make sure not to overwrite an existing cube
-        if(getCubeIdAt(x, y, z) != -1) {
+        if (getCubeIdAt(x, y, z) != -1) {
             return -1L;
         } else {
             final long newId = nextCubeId++;
@@ -69,7 +69,7 @@ public final class DumbWorldProvider implements IWorld {
     @Override
     public long removeCubeAt(int x, int y, int z) {
         final long cubeId = getCubeIdAt(x, y, z);
-        if(cubeId != -1L) {
+        if (cubeId != -1L) {
             // remove all associated components
             removeSimpleFixedRendererFrom(cubeId);
 
@@ -102,7 +102,7 @@ public final class DumbWorldProvider implements IWorld {
 
     @Override
     public boolean addSimpleFixedRendererTo(long id, SimpleFixedRenderer simpleFixedRenderer) {
-        if(!componentMapping.containsKey(id)) {
+        if (!componentMapping.containsKey(id)) {
             return false;
         } else {
             simpleFixedRendererMap.put(id, simpleFixedRenderer);

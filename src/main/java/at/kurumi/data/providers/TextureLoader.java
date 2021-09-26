@@ -12,6 +12,7 @@ import java.nio.IntBuffer;
 
 /**
  * Provider class for {@link Texture} objects.
+ *
  * @see Texture
  * @see at.kurumi.data.managers.Textures
  */
@@ -20,6 +21,7 @@ public class TextureLoader {
     /**
      * Create and load a texture to VRAM that can be used as a fallback texture in case others fail to load.
      * The texture is a 2x2 pixel grid in black and purple.
+     *
      * @return textureId of the created texture
      */
     public static int createFallbackTexture() {
@@ -60,7 +62,7 @@ public class TextureLoader {
         final IntBuffer comp = MemoryUtil.memAllocInt(1);
 
         final ByteBuffer data = STBImage.stbi_load(path + fileName + ".png", width, height, comp, 4);
-        if(data == null){
+        if (data == null) {
             System.err.println(STBImage.stbi_failure_reason() + " -> " + fileName);
         }
 

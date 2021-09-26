@@ -1,7 +1,5 @@
 package at.kurumi.data.environment;
 
-import at.kurumi.data.environment.IWorld;
-
 public class EnvironmentGenerator {
 
     /**

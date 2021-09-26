@@ -14,7 +14,7 @@ public final class Coordinate {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof Coordinate)) {
+        if (!(o instanceof Coordinate)) {
             return false;
         } else {
             final Coordinate c = (Coordinate) o;

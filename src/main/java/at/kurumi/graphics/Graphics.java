@@ -1,8 +1,6 @@
 package at.kurumi.graphics;
 
 import at.kurumi.data.managers.Shaders;
-import at.kurumi.graphics.Display;
-import at.kurumi.graphics.GraphicsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -57,7 +55,7 @@ public class Graphics implements Runnable {
 
     public void doRenderLoop(Shaders shaders) {
         double frameStart;
-        while(!Thread.interrupted()) {
+        while (!Thread.interrupted()) {
             frameStart = GLFW.glfwGetTime();
             try {
                 Thread.sleep((long) Math.max(0, (GLFW.glfwGetTime() - frameStart) - targetFrameTime));
@@ -65,8 +63,8 @@ public class Graphics implements Runnable {
                 LOG.debug("hello render loop");
 
                 display.submitFrame();
-                if(GLFW.glfwWindowShouldClose(display.getDisplayPointer())) {
-                    if(this.onStopCallable == null) {
+                if (GLFW.glfwWindowShouldClose(display.getDisplayPointer())) {
+                    if (this.onStopCallable == null) {
                         throw new IllegalStateException("onStop procedure has not been set");
                     }
                     onStopCallable.run();
