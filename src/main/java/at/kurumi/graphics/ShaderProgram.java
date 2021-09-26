@@ -14,11 +14,24 @@ import java.nio.charset.StandardCharsets;
 public abstract class ShaderProgram {
 
     private static final String SHADER_LOC = "/shader/";
+    private static final String VERTEX_SHADER_PREFIX = "v_";
+    private static final String FRAGMENT_SHADER_PREFIX = "f_";
 
     private final int programId;
 
+    /**
+     * Load and build a new shader program. GLSL source files must have the prefix {@code v_} or {@code f_} for
+     * their shader type in their file name.
+     *
+     * @param vertexFile vertex shader resource name
+     * @param fragmentFile fragment shader resource name
+     * @throws IOException       thrown if an error occurred while reading the shader
+     * @throws GraphicsException thrown if shader program creation fails
+     */
     protected ShaderProgram(String vertexFile, String fragmentFile) throws GraphicsException, IOException {
-        programId = buildShaderProgram("v_" + vertexFile, "f_" + fragmentFile);
+        programId = buildShaderProgram(
+                VERTEX_SHADER_PREFIX + vertexFile,
+                FRAGMENT_SHADER_PREFIX + fragmentFile);
         getAllUniformLocations();
     }
 

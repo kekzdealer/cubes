@@ -1,10 +1,10 @@
 package at.kurumi.util;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL11C;
 import org.lwjgl.opengl.GL12C;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -25,7 +25,7 @@ public class TextureLoader {
                 Byte.MAX_VALUE, 0, Byte.MAX_VALUE, 0, 0, 0
         };
         // width = 2, height = 2, channels = 3 -> total buffer size required
-        final ByteBuffer dataBuffer = BufferUtils.createByteBuffer(2 * 2 * 3);
+        final ByteBuffer dataBuffer = MemoryUtil.memAlloc(2 * 2 * 3);
         dataBuffer.put(colourData);
         dataBuffer.flip();
 
@@ -49,9 +49,9 @@ public class TextureLoader {
 
     private int loadTextureFromDisk(String path, String fileName) {
         // Initialized some buffers to capture return data
-        final IntBuffer width = BufferUtils.createIntBuffer(1);
-        final IntBuffer height = BufferUtils.createIntBuffer(1);
-        final IntBuffer comp = BufferUtils.createIntBuffer(1);
+        final IntBuffer width = MemoryUtil.memAllocInt(1);
+        final IntBuffer height = MemoryUtil.memAllocInt(1);
+        final IntBuffer comp = MemoryUtil.memAllocInt(1);
 
         final ByteBuffer data = STBImage.stbi_load(path + fileName + ".png", width, height, comp, 4);
         if(data == null){

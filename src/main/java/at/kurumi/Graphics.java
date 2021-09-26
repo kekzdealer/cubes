@@ -46,6 +46,7 @@ public class Graphics implements Runnable {
             doRenderLoop(shaderManager);
         } catch (GraphicsException e) {
             LOG.error("Terminating on graphics error: {}", e.getMessage());
+            onStopCallable.run();
         }
 
     }
