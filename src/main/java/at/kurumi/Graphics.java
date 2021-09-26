@@ -5,14 +5,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.function.Function;
-
 /**
  * Home for the Display and rendering thread.
  */
 public class Graphics implements Runnable {
 
-    private static final Logger LOG = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger("Graphics");
 
     private final Display display;
 
@@ -42,7 +40,7 @@ public class Graphics implements Runnable {
     public void run() {
         double frameStart;
         while(!Thread.interrupted()) {
-            frameStart = (float) GLFW.glfwGetTime();
+            frameStart = GLFW.glfwGetTime();
             try {
                 Thread.sleep((long) Math.max(0, (GLFW.glfwGetTime() - frameStart) - targetFrameTime));
 
@@ -50,6 +48,9 @@ public class Graphics implements Runnable {
 
                 display.submitFrame();
                 if(GLFW.glfwWindowShouldClose(display.getDisplayPointer())) {
+                    if(this.onStopCallable == null) {
+                        throw new IllegalStateException("onStop procedure has not been set");
+                    }
                     onStopCallable.run();
                 }
             } catch (InterruptedException e) {
