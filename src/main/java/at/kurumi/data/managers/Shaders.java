@@ -31,9 +31,13 @@ public class Shaders {
             // InvocationTargetExceptions wrap exceptions thrown by the method that was called
             throw new GraphicsException(e.getCause());
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new GraphicsException("Could not access shader program implementation constructor");
+            final var msg = String
+                    .format("Could not access %s constructor", name);
+            throw new GraphicsException(msg);
         } catch (NoSuchMethodException e) {
-            throw new GraphicsException("Could not find shader program implementation default constructor");
+            final var msg = String
+                    .format("Could not find %s default constructor", name);
+            throw new GraphicsException(msg);
         }
     }
 
