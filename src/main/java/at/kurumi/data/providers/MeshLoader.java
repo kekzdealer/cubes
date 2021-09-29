@@ -21,22 +21,24 @@ public class MeshLoader {
         // init data
         final float[] vertices = {
                 // Bottom left triangle
-                1.0f, 0.0f, 0.0f,// r t
-                0.0f, 1.0f, 0.0f, // l t
-                0.0f, 0.0f, 0.0f,// l b
+                0.0f, 1.0f, 0.0f,// l b
+                1.0f, 1.0f, 0.0f, // r b
+                0.0f, 0.0f, 0.0f,// l t
                 // Top right triangle
-                0.0f, 1.0f, 0.0f,// l t
-                1.0f, 0.0f, 0.0f,// r b
-                1.0f, 1.0f, 0.0f// r t
+                1.0f, 0.0f, 0.0f,// r t
+                0.0f, 0.0f, 0.0f,// l t
+                1.0f, 1.0f, 0.0f// r b
         };
         // Prime VAO with texture coordinates
         final float[] uvs = {
-                1.0f, 1.0f, // Left bottom triangle
-                0.0f, 0.0f,
+                // Bottom left triangle
                 0.0f, 1.0f,
-                0.0f, 0.0f, // Right top triangle
                 1.0f, 1.0f,
-                1.0f, 0.0f
+                0.0f, 0.0f,
+                // Top right triangle
+                1.0f, 0.0f,
+                0.0f, 0.0f,
+                1.0f, 1.0f,
         };
         // Store in FloatBuffer
         final var vertexFloatBuffer = MemoryUtil.memAllocFloat(vertices.length);
@@ -58,7 +60,6 @@ public class MeshLoader {
     }
 
     private Mesh createCube() {
-        // TODO double check -> lb, rb, lt & rt, lt, rb (bottom left tris before top right, and always start at the outer right angled corner
         final float[] vertices = {
         /*      Lower four, clockwise */
         /*0*/   0.0f, 0.0f, 0.0f,
@@ -72,57 +73,58 @@ public class MeshLoader {
         /*7*/   1.0f, 1.0f, 0.0f
         };
         final int[] indices = {
-                0, 2, 1, // Down (0)
-                0, 3, 2,
-                4, 6, 5, // Up (1)
-                4, 7, 6,
-                2, 5, 6, // North (2)
-                2, 1, 5,
-                3, 6, 7, // East (3)
-                3, 2, 6,
-                0, 7, 4, // South (4)
-                0, 3, 7,
-                1, 4, 5, // West (5)
-                1, 0, 4
+                0, 1, 3, // Down (0)
+                2, 3, 1,
+                4, 7, 5, // Up (1)
+                6, 5, 7,
+                2, 1, 6, // North (2)
+                5, 6, 2,
+                3, 2, 7, // East (3)
+                6, 7, 2,
+                0, 3, 4, // South (4)
+                7, 4, 3,
+                1, 0, 5, // West (5)
+                4, 5, 0
         };
         final float[] uvs = {
-                0.0f, 0.0f, // Down (0)
-                1.0f, 1.0f,
+                1.0f, 1.0f, // Down (0)
                 1.0f, 0.0f,
+                0.0f, 1.0f,
                 0.0f, 0.0f,
                 0.0f, 1.0f,
-                1.0f, 1.0f,
+                1.0f, 0.0f,
+        /* Sets of 6 repeat for each face
+            except the bottom one */
                 0.0f, 1.0f, // Up (1)
                 1.0f, 1.0f,
                 0.0f, 0.0f,
-                0.0f, 1.0f,
-                1.0f, 1.0f,
-                1.0f, 0.0f,
-        /* Sets of 6 repeat for each vertical face */
-                0.0f, 1.0f, // North (2)
                 1.0f, 0.0f,
                 0.0f, 0.0f,
-                0.0f, 1.0f,
                 1.0f, 1.0f,
+                0.0f, 1.0f, // North (2)
+                1.0f, 1.0f,
+                0.0f, 0.0f,
+                1.0f, 0.0f,
+                0.0f, 0.0f,
                 1.0f, 1.0f,
                 0.0f, 1.0f, // East (3)
+                1.0f, 1.0f,
+                0.0f, 0.0f,
                 1.0f, 0.0f,
                 0.0f, 0.0f,
-                0.0f, 1.0f,
-                1.0f, 1.0f,
                 1.0f, 1.0f,
                 0.0f, 1.0f, // South (4)
+                1.0f, 1.0f,
+                0.0f, 0.0f,
                 1.0f, 0.0f,
                 0.0f, 0.0f,
-                0.0f, 1.0f,
-                1.0f, 1.0f,
                 1.0f, 1.0f,
                 0.0f, 1.0f, // West (5)
+                1.0f, 1.0f,
+                0.0f, 0.0f,
                 1.0f, 0.0f,
                 0.0f, 0.0f,
-                0.0f, 1.0f,
                 1.0f, 1.0f,
-                1.0f, 1.0f
         };
 
         // Store in FloatBuffer, outside the heap in native memory
