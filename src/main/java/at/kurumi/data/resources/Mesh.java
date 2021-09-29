@@ -9,4 +9,26 @@ package at.kurumi.data.resources;
  * @see at.kurumi.data.managers.Meshes
  */
 public class Mesh {
+
+    private final int vaoId;
+    private final int vertexCount;
+    private final int[] vertexBufferObjectIDs;
+
+    public Mesh(int vaoId, int vertexCount, int... vertexBufferObjectIDs) {
+        this.vaoId = vaoId;
+        this.vertexCount = vertexCount;
+        this.vertexBufferObjectIDs = vertexBufferObjectIDs;
+    }
+
+    public int getVaoId() {
+        return vaoId;
+    }
+
+    public int getVertexCount() {
+        return vertexCount;
+    }
+
+    public int[] getVertexBufferObjectIDs() {
+        return vertexBufferObjectIDs;
+    }
 }
