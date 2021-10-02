@@ -1,18 +1,38 @@
 package at.kurumi.data.managers;
 
 import at.kurumi.data.resources.Material;
+import at.kurumi.graphics.GraphicsException;
 
-import java.util.HashMap;
-import java.util.Map;
+import static at.kurumi.ClientStart.DEFAULT_STRING;
 
 /**
  * Manager class for {@link Material} objects.
  *
  * @see at.kurumi.data.resources.Material
  */
-public class Materials {
+public class Materials extends AbstractManager<Material> {
 
-    public static String DEFAULT_MATERIAL_NAME = "default";
+    private final Textures textures;
 
-    public final Map<String, Material> materials = new HashMap<>();
+    public Materials(Textures textures) throws GraphicsException {
+        this.textures = textures;
+
+        resources.put(DEFAULT_STRING, new Material(textures.getTexture(DEFAULT_STRING)));
+    }
+
+    /**
+     * Get the {@link Material} object for a material name. Load it if it isn't yet.
+     *
+     * @param name the material name
+     * @return {@link Material} object
+     */
+    public Material getMaterial(String name) {
+        if(resources.containsKey(name)){
+           return resources.get(name);
+        }
+        final var material = new Material(textures.getTexture(name));
+        resources.put(name, material);
+        return material;
+    }
+
 }

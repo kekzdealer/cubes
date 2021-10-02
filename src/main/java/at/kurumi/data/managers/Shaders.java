@@ -1,48 +1,38 @@
 package at.kurumi.data.managers;
 
-import at.kurumi.data.resources.ShaderProgram;
+import at.kurumi.data.resources.Shader;
 import at.kurumi.graphics.DefaultShader;
 import at.kurumi.graphics.GraphicsException;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+
+import static at.kurumi.ClientStart.DEFAULT_STRING;
 
 /**
- * Manager class for {@link ShaderProgram} implementations.
+ * Manager class for {@link Shader} implementations.
  *
- * @see ShaderProgram
+ * @see Shader
  */
-public class Shaders {
-
-    public static final String DEFAULT_SHADER_NAME = "default";
-
-    private final Map<String, ShaderProgram> shaderPrograms = new HashMap<>();
+public class Shaders extends AbstractManager<Shader> {
 
     public Shaders() throws GraphicsException {
-        registerShader(DEFAULT_SHADER_NAME, DefaultShader.class);
-    }
-
-    public void registerShader(String name, Class<? extends ShaderProgram> shaderClass) throws GraphicsException {
-        try {
-            final var shaderProgram = shaderClass.getConstructor().newInstance();
-            shaderPrograms.put(name, shaderProgram);
-        } catch (InvocationTargetException e) {
-            // InvocationTargetExceptions wrap exceptions thrown by the method that was called
-            throw new GraphicsException(e.getCause());
-        } catch (InstantiationException | IllegalAccessException e) {
-            final var msg = String
-                    .format("Could not access %s constructor", name);
-            throw new GraphicsException(msg);
-        } catch (NoSuchMethodException e) {
-            final var msg = String
-                    .format("Could not find %s default constructor", name);
-            throw new GraphicsException(msg);
+        registerShader(DEFAULT_STRING, DefaultShader.class);
+        if(resources.get(DEFAULT_STRING) == null) {
+            throw new GraphicsException("Failed to load default Shader");
         }
     }
 
-    public void dispose() {
-        shaderPrograms.values().forEach(ShaderProgram::deleteShader);
+    public void registerShader(String name, Class<? extends Shader> shaderClass) {
+        try {
+            final var shaderProgram = shaderClass.getConstructor().newInstance();
+            resources.put(name, shaderProgram);
+        } catch (InvocationTargetException e) {
+            super.LOG.error(e.getCause());
+        } catch (InstantiationException | IllegalAccessException e) {
+            super.LOG.error("Could not access {} constructor", name);
+        } catch (NoSuchMethodException e) {
+            super.LOG.error("Could not find {} default constructor", name);
+        }
     }
 
     /**
@@ -52,7 +42,8 @@ public class Shaders {
      * @param name shader program name
      * @return specified shader program
      */
-    public ShaderProgram getShaderProgram(String name) {
-        return shaderPrograms.getOrDefault(name, shaderPrograms.get(DEFAULT_SHADER_NAME));
+    public Shader getShaderProgram(String name) {
+        return resources.getOrDefault(name, resources.get(DEFAULT_STRING));
     }
+
 }

@@ -1,6 +1,7 @@
 package at.kurumi.data.providers;
 
 import at.kurumi.data.resources.Texture;
+import at.kurumi.graphics.GraphicsException;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL11C;
 import org.lwjgl.opengl.GL12C;
@@ -9,6 +10,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 
 /**
  * Provider class for {@link Texture} objects.
@@ -24,7 +26,7 @@ public class TextureLoader {
      *
      * @return textureId of the created texture
      */
-    public static int createFallbackTexture() {
+    public Texture createFallbackTexture() {
         // Create raw data for the texture
         // black - purple
         // purple - black
@@ -52,10 +54,10 @@ public class TextureLoader {
         // Unbind texture buffer
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
-        return textureId;
+        return new Texture(textureId);
     }
 
-    private int loadTextureFromDisk(String path, String fileName) {
+    public Texture loadTextureFromDisk(String path, String fileName) throws GraphicsException {
         // Initialized some buffers to capture return data
         final IntBuffer width = MemoryUtil.memAllocInt(1);
         final IntBuffer height = MemoryUtil.memAllocInt(1);
@@ -63,7 +65,7 @@ public class TextureLoader {
 
         final ByteBuffer data = STBImage.stbi_load(path + fileName + ".png", width, height, comp, 4);
         if (data == null) {
-            System.err.println(STBImage.stbi_failure_reason() + " -> " + fileName);
+            throw new GraphicsException(STBImage.stbi_failure_reason() + " -> " + fileName);
         }
 
         // Create new empty texture buffer and grab it's id
@@ -81,6 +83,6 @@ public class TextureLoader {
         // Unbind texture buffer
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
-        return textureId;
+        return new Texture(textureId);
     }
 }

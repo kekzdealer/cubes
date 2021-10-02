@@ -8,7 +8,7 @@ package at.kurumi.data.resources;
  *
  * @see at.kurumi.data.managers.Meshes
  */
-public class Mesh {
+public class Mesh implements IManagedResource {
 
     private final int vaoId;
     private final int vertexCount;
@@ -30,5 +30,10 @@ public class Mesh {
 
     public int[] getVertexBufferObjectIDs() {
         return vertexBufferObjectIDs;
+    }
+
+    @Override
+    public void dispose() {
+        // TODO implement Mesh dispose code
     }
 }

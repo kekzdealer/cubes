@@ -3,7 +3,7 @@ package at.kurumi.graphics;
 import at.kurumi.data.managers.GUI;
 import at.kurumi.data.resources.Material;
 import at.kurumi.data.resources.Mesh;
-import at.kurumi.data.resources.ShaderProgram;
+import at.kurumi.data.resources.Shader;
 import org.joml.Vector2fc;
 
 public interface UIElement {
@@ -23,11 +23,11 @@ public interface UIElement {
     Material getMaterial();
 
     /**
-     * Must return the {@link ShaderProgram} that should be used to render the UI element.
+     * Must return the {@link Shader} that should be used to render the UI element.
      *
      * @return the shader program
      */
-    ShaderProgram getShader();
+    Shader getShader();
 
     /**
      * Get the position of this UI element in clip space coordinates.
@@ -43,7 +43,7 @@ public interface UIElement {
      *     the entire thing from memory and will be called on application shutdown.
      * </p>
      *
-     * @see GUI#dispose()
+     * @see GUI#close()
      */
     void destroyUIElement();
 }

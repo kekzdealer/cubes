@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @see at.kurumi.data.managers.Shaders
  */
-public abstract class ShaderProgram {
+public abstract class Shader implements IManagedResource {
 
     private static final String SHADER_LOC = "/shader/";
     private static final String VERTEX_SHADER_PREFIX = "v_";
@@ -38,7 +38,7 @@ public abstract class ShaderProgram {
      * @throws IOException       thrown if an error occurred while reading the shader
      * @throws GraphicsException thrown if shader program creation fails
      */
-    protected ShaderProgram(String vertexFile, String fragmentFile) throws GraphicsException, IOException {
+    protected Shader(String vertexFile, String fragmentFile) throws GraphicsException, IOException {
         programId = buildShaderProgram(
                 VERTEX_SHADER_PREFIX + vertexFile + SHADER_FILE_EXTENSION,
                 FRAGMENT_SHADER_PREFIX + fragmentFile + SHADER_FILE_EXTENSION);
@@ -68,7 +68,7 @@ public abstract class ShaderProgram {
 
     private String readShaderFile(String fileName) throws IOException {
         final var shaderLoc = String.format("%s%s", SHADER_LOC, fileName);
-        try (final var is = ShaderProgram.class.getResourceAsStream(shaderLoc)) {
+        try (final var is = Shader.class.getResourceAsStream(shaderLoc)) {
             if (is == null) {
                 throw new IOException();
             }
@@ -112,10 +112,6 @@ public abstract class ShaderProgram {
             throw new GraphicsException(GL20C.glGetShaderInfoLog(shaderId));
         }
         return shaderId;
-    }
-
-    public void deleteShader() {
-        GL20C.glDeleteProgram(programId);
     }
 
     protected abstract void bindAttributes();
@@ -164,4 +160,8 @@ public abstract class ShaderProgram {
         GL20C.glUniformMatrix4fv(location, false, matrixBuffer4f);
     }
 
+    @Override
+    public void dispose() {
+        GL20C.glDeleteProgram(programId);
+    }
 }

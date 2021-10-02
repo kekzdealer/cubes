@@ -15,6 +15,8 @@ import java.util.ResourceBundle;
  */
 public final class ClientStart {
 
+    public static final String DEFAULT_STRING = "default";
+
     private static final Logger LOG = LogManager.getLogger();
 
     private final Graphics graphics;

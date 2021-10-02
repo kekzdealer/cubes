@@ -8,5 +8,20 @@ package at.kurumi.data.resources;
  *
  * @see at.kurumi.data.managers.Materials
  */
-public class Material {
+public class Material implements IManagedResource {
+
+    private final Texture diffuse;
+
+    public Material(Texture diffuse) {
+        this.diffuse = diffuse;
+    }
+
+    public Texture getDiffuse() {
+        return diffuse;
+    }
+
+    @Override
+    public void dispose() {
+        // TODO implement Material dispose code
+    }
 }

@@ -17,7 +17,23 @@ import java.nio.FloatBuffer;
  */
 public class MeshLoader {
 
-    private Mesh createQuad() {
+    /**
+     * Create a quad with a default <code>1.0</code> width and <code>1.0</code> height.
+     *
+     * @return quad as {@link Mesh} object
+     */
+    public Mesh createQuad() {
+        return createQuad(1.0f, 1.0f);
+    }
+
+    /**
+     * Create a quad with the specified <code>width</code> and <code>height</code>.
+     *
+     * @param width width of the quad
+     * @param height height of the triangle
+     * @return quad as {@link Mesh} object
+     */
+    public Mesh createQuad(float width, float height) {
         // init data
         final float[] vertices = {
                 // Bottom left triangle
@@ -59,7 +75,7 @@ public class MeshLoader {
         return new Mesh(vaoId, vertices.length / 3, vertexVBOId, uvVBOId);
     }
 
-    private Mesh createCube() {
+    public Mesh createCube() {
         final float[] vertices = {
         /*      Lower four, clockwise */
         /*0*/   0.0f, 0.0f, 0.0f,

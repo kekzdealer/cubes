@@ -11,7 +11,7 @@ import at.kurumi.data.providers.TextureLoader;
  * @see at.kurumi.data.managers.Textures
  * @see TextureLoader
  */
-public class Texture {
+public class Texture implements IManagedResource {
 
     private final int id;
 
@@ -21,5 +21,10 @@ public class Texture {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public void dispose() {
+        // TODO implement Texture dispose code
     }
 }

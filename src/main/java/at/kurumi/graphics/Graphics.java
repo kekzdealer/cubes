@@ -1,9 +1,12 @@
 package at.kurumi.graphics;
 
-import at.kurumi.data.managers.Shaders;
+import at.kurumi.data.managers.*;
+import at.kurumi.data.providers.MeshLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+
+import static at.kurumi.ClientStart.DEFAULT_STRING;
 
 /**
  * Home for the Display and rendering thread.
@@ -42,10 +45,17 @@ public class Graphics implements Runnable {
                 .setVisible(false)
                 .setWindowPosition(320, 180)
                 .finishSetup();
-        try {
-            final var shaderManager = new Shaders();
 
-            doRenderLoop(shaderManager);
+        try (final var meshes = new Meshes(new MeshLoader());
+             final var shaders = new Shaders();
+             final var textures = new Textures();
+             final var materials = new Materials(textures);
+             final var gui = new GUI(meshes, materials, shaders)) {
+
+            gui.registerHealthbarProvider(DEFAULT_STRING, HealthBar.class);
+
+            doRenderLoop();
+
         } catch (GraphicsException e) {
             LOG.error("Terminating on graphics error: {}", e.getMessage());
             onStopCallable.run();
@@ -53,7 +63,7 @@ public class Graphics implements Runnable {
 
     }
 
-    public void doRenderLoop(Shaders shaders) {
+    public void doRenderLoop() {
         double frameStart;
         while (!Thread.interrupted()) {
             frameStart = GLFW.glfwGetTime();

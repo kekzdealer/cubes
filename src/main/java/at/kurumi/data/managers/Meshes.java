@@ -1,6 +1,9 @@
 package at.kurumi.data.managers;
 
+import at.kurumi.data.providers.MeshLoader;
 import at.kurumi.data.resources.Mesh;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,37 +13,31 @@ import java.util.Map;
  *
  * @see Mesh
  */
-public class Meshes {
+public class Meshes extends AbstractManager<Mesh> {
 
-    public static final String DEFAULT_MESH_NAME = "default";
+    public static final String QUAD_1X1 = "quad_1x1";
+    public static final String CUBE = "cube";
 
-    private static final float[] cubeVertices = {
-            0.0f, 0.0f, 0.0f, // lower four, clockwise
-            0.0f, 0.0f, -1,0f,
-            1.0f, 0.0f, -1.0f,
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, // upper four, clockwise
-            0.0f, 1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
-            1.0f, 1.0f, 0.0f
-    };
+    private final Map<String, Vector2fc> customQuads = new HashMap<>();
+    private final MeshLoader meshLoader;
 
-    private static final int[] cubeIndices = {
-            0, 2, 1, // down (0)
-            0, 3, 2,
-            4, 6, 5, // up (1)
-            4, 7, 6,
-            2, 5, 6, // north (2)
-            2, 1, 5,
-            3, 6, 7, // east (3)
-            3, 2, 6,
-            0, 7, 4, // south (4)
-            0, 3, 7,
-            1, 4, 5, // west (5)
-            1, 0, 4
-    };
+    public Meshes(MeshLoader meshLoader) {
+        this.meshLoader = meshLoader;
 
-    private final Map<String, Mesh> meshes = new HashMap<>();
+        resources.put(QUAD_1X1, meshLoader.createQuad());
+        resources.put(CUBE, meshLoader.createCube());
+    }
 
+    public void registerQuadWithDimensions(String name, float width, float height) {
+        customQuads.put(name, new Vector2f(width, height));
+    }
+
+    public Mesh getQuad1x1() {
+        return resources.get(QUAD_1X1);
+    }
+
+    public Mesh getCube() {
+        return resources.get(CUBE);
+    }
 
 }
