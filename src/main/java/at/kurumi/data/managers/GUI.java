@@ -51,6 +51,10 @@ public class GUI implements AutoCloseable {
         activeHealthbar = healthBars.getOrDefault(name, healthBars.get(DEFAULT_STRING));
     }
 
+    public void renderHealthBar() {
+        activeHealthbar.render();
+    }
+
     @Override
     public void close() {
         healthBars.values().forEach(AbstractHealthBar::destroyUIElement);

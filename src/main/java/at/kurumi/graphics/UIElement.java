@@ -1,40 +1,13 @@
 package at.kurumi.graphics;
 
 import at.kurumi.data.managers.GUI;
-import at.kurumi.data.resources.Material;
-import at.kurumi.data.resources.Mesh;
-import at.kurumi.data.resources.Shader;
-import org.joml.Vector2fc;
 
 public interface UIElement {
 
     /**
-     * Must return the {@link Mesh} that the UI element should render on.
-     *
-     * @return target mesh
+     * Render the UI element
      */
-    Mesh getMesh();
-
-    /**
-     * Must return the {@link Material} that should be rendered onto the target {@link Mesh}.
-     *
-     * @return material to render
-     */
-    Material getMaterial();
-
-    /**
-     * Must return the {@link Shader} that should be used to render the UI element.
-     *
-     * @return the shader program
-     */
-    Shader getShader();
-
-    /**
-     * Get the position of this UI element in clip space coordinates.
-     *
-     * @return x and y coordinates between {@code -1.0} and {1.0}
-     */
-    Vector2fc getPosition();
+    void render();
 
     /**
      * Cleanup method for unloading and destroying this UI element provider.

@@ -22,6 +22,7 @@ public class Meshes extends AbstractManager<Mesh> {
     private final MeshLoader meshLoader;
 
     public Meshes(MeshLoader meshLoader) {
+        super(Meshes.class.getSimpleName());
         this.meshLoader = meshLoader;
 
         resources.put(QUAD_1X1, meshLoader.createQuad());

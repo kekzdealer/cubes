@@ -5,6 +5,7 @@ import at.kurumi.data.providers.MeshLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11C;
 
 import static at.kurumi.ClientStart.DEFAULT_STRING;
 
@@ -53,8 +54,9 @@ public class Graphics implements Runnable {
              final var gui = new GUI(meshes, materials, shaders)) {
 
             gui.registerHealthbarProvider(DEFAULT_STRING, HealthBar.class);
+            gui.activateHealthBar(DEFAULT_STRING);
 
-            doRenderLoop();
+            doRenderLoop(gui);
 
         } catch (GraphicsException e) {
             LOG.error("Terminating on graphics error: {}", e.getMessage());
@@ -63,14 +65,28 @@ public class Graphics implements Runnable {
 
     }
 
-    public void doRenderLoop() {
+    public void doRenderLoop(GUI gui) {
+        GL11C.glViewport(0, 0, displayHeight, displayWidth);
+        // Back-face culling
+        GL11C.glEnable(GL11C.GL_CULL_FACE);
+        GL11C.glCullFace(GL11C.GL_BACK);
+        // Depth-Testing
+        GL11C.glEnable(GL11C.GL_DEPTH_TEST);
+        GL11C.glDepthMask(true);
+
         double frameStart;
         while (!Thread.interrupted()) {
             frameStart = GLFW.glfwGetTime();
             try {
                 Thread.sleep((long) Math.max(0, (GLFW.glfwGetTime() - frameStart) - targetFrameTime));
-
                 LOG.debug("hello render loop");
+
+                // Prepare
+                GL11C.glClearColor(0.2f, 0.6f, 0.1f, 1.0f);
+                GL11C.glClear(GL11C.GL_COLOR_BUFFER_BIT | GL11C.GL_DEPTH_BUFFER_BIT);
+
+                // GUI
+                gui.renderHealthBar();
 
                 display.submitFrame();
                 if (GLFW.glfwWindowShouldClose(display.getDisplayPointer())) {

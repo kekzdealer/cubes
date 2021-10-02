@@ -16,6 +16,8 @@ import static at.kurumi.ClientStart.DEFAULT_STRING;
 public class Shaders extends AbstractManager<Shader> {
 
     public Shaders() throws GraphicsException {
+        super(Shaders.class.getSimpleName());
+
         registerShader(DEFAULT_STRING, DefaultShader.class);
         if(resources.get(DEFAULT_STRING) == null) {
             throw new GraphicsException("Failed to load default Shader");
@@ -42,7 +44,7 @@ public class Shaders extends AbstractManager<Shader> {
      * @param name shader program name
      * @return specified shader program
      */
-    public Shader getShaderProgram(String name) {
+    public Shader getShader(String name) {
         return resources.getOrDefault(name, resources.get(DEFAULT_STRING));
     }
 

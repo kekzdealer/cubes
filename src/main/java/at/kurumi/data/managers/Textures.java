@@ -18,6 +18,8 @@ public class Textures extends AbstractManager<Texture> {
     private final TextureLoader textureLoader;
 
     public Textures() {
+        super(Textures.class.getSimpleName());
+
         textureLoader = new TextureLoader();
         resources.put(DEFAULT_STRING, textureLoader.createFallbackTexture());
         // TODO verify default texture was created

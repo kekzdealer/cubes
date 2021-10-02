@@ -15,6 +15,7 @@ public class Materials extends AbstractManager<Material> {
     private final Textures textures;
 
     public Materials(Textures textures) throws GraphicsException {
+        super(Materials.class.getSimpleName());
         this.textures = textures;
 
         resources.put(DEFAULT_STRING, new Material(textures.getTexture(DEFAULT_STRING)));

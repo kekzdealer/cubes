@@ -14,12 +14,12 @@ public abstract class AbstractManager<T extends IManagedResource> implements Aut
 
     private Runnable errorReportCallback;
 
-    public AbstractManager() {
-        this(new HashMap<>());
+    public AbstractManager(String logName) {
+        this(new HashMap<>(), logName);
     }
 
-    public AbstractManager(Map<String, T> resources) {
-        LOG = LogManager.getLogger();
+    public AbstractManager(Map<String, T> resources, String logName) {
+        LOG = LogManager.getLogger(logName);
         this.resources = resources;
     }
 
