@@ -43,7 +43,7 @@ public final class ClientStart {
 
     public void onStart() {
         graphics.setOnStopCallback(this::onStop);
-        graphics.setTargetFps(60);
+        graphics.setTargetFps(1);
         graphicsThread.start();
     }
 

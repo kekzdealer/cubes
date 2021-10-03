@@ -31,9 +31,9 @@ public class Shaders extends AbstractManager<Shader> {
         } catch (InvocationTargetException e) {
             super.LOG.error(e.getCause());
         } catch (InstantiationException | IllegalAccessException e) {
-            super.LOG.error("Could not access {} constructor", name);
+            super.LOG.error("Could not access {} constructor", shaderClass.getName());
         } catch (NoSuchMethodException e) {
-            super.LOG.error("Could not find {} default constructor", name);
+            super.LOG.error("Could not find {} default constructor", shaderClass.getName());
         }
     }
 

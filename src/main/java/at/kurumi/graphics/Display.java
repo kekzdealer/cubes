@@ -71,6 +71,14 @@ public class Display {
         return this;
     }
 
+    public Display withForwardCompat() {
+        if (isInitialised) {
+            throw new IllegalStateException("Method has to be called before finishSetup()");
+        }
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+        return this;
+    }
+
     public Display setResizable(boolean isResizable) {
         if (isInitialised) {
             throw new IllegalStateException("Method has to be called before finishSetup()");

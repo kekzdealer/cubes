@@ -42,6 +42,7 @@ public class Graphics implements Runnable {
                 .setErrorPrint(System.err)
                 .setOGLVersion(3, 3)
                 .withCoreProfile()
+                .withForwardCompat()
                 .setResizable(false)
                 .setVisible(false)
                 .setWindowPosition(320, 180)
@@ -76,25 +77,31 @@ public class Graphics implements Runnable {
 
         double frameStart;
         while (!Thread.interrupted()) {
+            // Prepare
             frameStart = GLFW.glfwGetTime();
-            try {
-                Thread.sleep((long) Math.max(0, (GLFW.glfwGetTime() - frameStart) - targetFrameTime));
-                LOG.debug("hello render loop");
+            GLFW.glfwPollEvents();
+            GL11C.glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
+            GL11C.glClear(GL11C.GL_COLOR_BUFFER_BIT | GL11C.GL_DEPTH_BUFFER_BIT);
 
-                // Prepare
-                GL11C.glClearColor(0.2f, 0.6f, 0.1f, 1.0f);
-                GL11C.glClear(GL11C.GL_COLOR_BUFFER_BIT | GL11C.GL_DEPTH_BUFFER_BIT);
+            // GUI
+            gui.renderHealthBar();
 
-                // GUI
-                gui.renderHealthBar();
+            // Swap frame buffer content to display
+            display.submitFrame();
 
-                display.submitFrame();
-                if (GLFW.glfwWindowShouldClose(display.getDisplayPointer())) {
-                    if (this.onStopCallable == null) {
-                        throw new IllegalStateException("onStop procedure has not been set");
-                    }
-                    onStopCallable.run();
+            // Check for window close event (x or ESC)
+            if (GLFW.glfwWindowShouldClose(display.getDisplayPointer())) {
+                if (this.onStopCallable == null) {
+                    throw new IllegalStateException("onStop procedure has not been set");
                 }
+                onStopCallable.run();
+            }
+
+            // Manage loop speed
+            try {
+                final var frameTime = GLFW.glfwGetTime() - frameStart;
+                LOG.info("Frame time: {}", frameTime);
+                Thread.sleep((long) Math.max(0, targetFrameTime - frameTime));
             } catch (InterruptedException e) {
                 LOG.info("Graphics thread interrupted. Executing onStop procedure");
             }

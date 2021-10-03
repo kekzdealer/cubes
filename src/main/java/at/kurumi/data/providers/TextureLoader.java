@@ -68,7 +68,7 @@ public class TextureLoader {
             throw new GraphicsException(STBImage.stbi_failure_reason() + " -> " + fileName);
         }
 
-        // Create new empty texture buffer and grab it's id
+        // Create new empty texture buffer and grab its id
         final int textureId = GL11C.glGenTextures();
         // Bind texture buffer to GL_TEXTURE_2D
         GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, textureId);
