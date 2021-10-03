@@ -43,11 +43,11 @@ public class HealthBar extends AbstractHealthBar {
 
         mesh.bind();
         GL13C.glActiveTexture(GL13C.GL_TEXTURE0);
-        GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, materialOutline.getDiffuse().getId());
+        //GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, materialOutline.getDiffuse().getId());
 
         shader.uploadTexture(0); // Activated texture bank 0 two lines ago, so pass 0 here.
         shader.uploadTransformation(new Matrix4f()
-                .translate(-1.0f, -1.0f, 0.0f)
+                .translate(-1.0f, 0.0f, 0.0f)
                 .scale(0.1f));
 
         GL11C.glDrawArrays(GL11.GL_TRIANGLES, 0, mesh.getVertexCount());

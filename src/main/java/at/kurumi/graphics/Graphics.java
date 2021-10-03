@@ -38,7 +38,7 @@ public class Graphics {
         meshes = new Meshes(new MeshLoader());
         shaders = new Shaders();
         textures = new Textures();
-        materials = new Materials(textures);
+        materials = new Materials(shaders, textures);
 
         gui = new GUI(meshes, materials, shaders);
         gui.registerHealthbarProvider(DEFAULT_STRING, HealthBar.class);

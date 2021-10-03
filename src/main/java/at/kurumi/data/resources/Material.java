@@ -1,27 +1,34 @@
 package at.kurumi.data.resources;
 
+import at.kurumi.data.managers.Shaders;
+import at.kurumi.data.managers.Textures;
+
 /**
- * <h2>Represents a single material</h2>
+ * <h2>Represents a material</h2>
  * <p>
- * Each material can consist of multiple textures. Examples texture types are: diffuse, normal, specular
+ * Each material has a {@link Shader} and one or more {@link Texture}s
  * </p>
  *
  * @see at.kurumi.data.managers.Materials
  */
-public class Material implements IManagedResource {
+public abstract class Material implements IManagedResource {
 
-    private final Texture diffuse;
+    protected final Shaders shaders;
+    protected final Textures textures;
 
-    public Material(Texture diffuse) {
-        this.diffuse = diffuse;
+    protected Material(Shaders shaders, Textures textures) {
+        this.shaders = shaders;
+        this.textures = textures;
     }
 
-    public Texture getDiffuse() {
-        return diffuse;
-    }
+    /**
+     * Bind the Shader, activate textures, and upload any material-relevant shader parameters.
+     */
+    public abstract void bind();
 
-    @Override
-    public void dispose() {
-        // TODO implement Material dispose code
-    }
+    /**
+     * Unbind the Shader, and deactivate textures.
+     */
+    public abstract void unbind();
+
 }

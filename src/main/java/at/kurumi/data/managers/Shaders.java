@@ -38,11 +38,10 @@ public class Shaders extends AbstractManager<Shader> {
     }
 
     /**
-     * Returns the specified shader program, or the default shader program if the specified shader program is
-     * not registered.
+     * Returns the specified shader, or the default shader if the specified shader has no entry.
      *
-     * @param name shader program name
-     * @return specified shader program
+     * @param name shader name
+     * @return the shader
      */
     public Shader getShader(String name) {
         return resources.getOrDefault(name, resources.get(DEFAULT_STRING));
