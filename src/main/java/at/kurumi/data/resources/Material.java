@@ -11,7 +11,7 @@ import at.kurumi.data.managers.Textures;
  *
  * @see at.kurumi.data.managers.Materials
  */
-public abstract class Material implements IManagedResource {
+public abstract class Material<T extends Shader> implements IManagedResource {
 
     protected final Shaders shaders;
     protected final Textures textures;
@@ -30,5 +30,12 @@ public abstract class Material implements IManagedResource {
      * Unbind the Shader, and deactivate textures.
      */
     public abstract void unbind();
+
+    /**
+     * Get the Shader for uploading transforms, etc
+     *
+     * @return the Shader
+     */
+    public abstract T getShader();
 
 }

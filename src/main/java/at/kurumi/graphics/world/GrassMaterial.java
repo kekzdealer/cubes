@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL13C;
 
 import static at.kurumi.ClientStart.DEFAULT_STRING;
 
-public class GrassMaterial extends Material {
+public class GrassMaterial extends Material<DefaultShader> {
 
     private final DefaultShader shader;
     private final Texture texture;
@@ -18,7 +18,7 @@ public class GrassMaterial extends Material {
     public GrassMaterial(Shaders shaders, Textures textures) {
         super(shaders, textures);
         this.shader = (DefaultShader) shaders.getShader(DEFAULT_STRING);
-        this.texture = textures.getTexture("grass_top");
+        this.texture = textures.getTexture("grass_up");
     }
 
     @Override
@@ -33,6 +33,11 @@ public class GrassMaterial extends Material {
     public void unbind() {
         shader.stop();
         GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, 0);
+    }
+
+    @Override
+    public DefaultShader getShader() {
+        return shader;
     }
 
     @Override

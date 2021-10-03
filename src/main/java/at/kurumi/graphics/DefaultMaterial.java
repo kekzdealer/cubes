@@ -3,6 +3,7 @@ package at.kurumi.graphics;
 import at.kurumi.data.managers.Shaders;
 import at.kurumi.data.managers.Textures;
 import at.kurumi.data.resources.Material;
+import at.kurumi.data.resources.Shader;
 import at.kurumi.data.resources.Texture;
 import org.lwjgl.opengl.GL11C;
 import org.lwjgl.opengl.GL13C;
@@ -12,7 +13,7 @@ import static at.kurumi.ClientStart.DEFAULT_STRING;
 /**
  * Default material with {@link DefaultShader} and default texture.
  */
-public class DefaultMaterial extends Material {
+public class DefaultMaterial extends Material<DefaultShader> {
 
     private final DefaultShader shader;
     private final Texture texture;
@@ -35,6 +36,11 @@ public class DefaultMaterial extends Material {
     public void unbind() {
         shader.stop();
         GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, 0);
+    }
+
+    @Override
+    public DefaultShader getShader() {
+        return shader;
     }
 
     @Override

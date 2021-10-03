@@ -2,12 +2,10 @@ package at.kurumi.data.managers;
 
 import at.kurumi.data.resources.Material;
 import at.kurumi.data.resources.Shader;
-import at.kurumi.data.resources.Texture;
+import at.kurumi.graphics.DefaultMaterial;
 import at.kurumi.graphics.GraphicsException;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static at.kurumi.ClientStart.DEFAULT_STRING;
 
@@ -16,7 +14,7 @@ import static at.kurumi.ClientStart.DEFAULT_STRING;
  *
  * @see at.kurumi.data.resources.Material
  */
-public class Materials extends AbstractManager<Material> {
+public class Materials extends AbstractManager<Material<? extends Shader>> {
 
     private final Shaders shaders;
     private final Textures textures;
@@ -26,10 +24,10 @@ public class Materials extends AbstractManager<Material> {
         this.shaders = shaders;
         this.textures = textures;
 
-        // TODO register default material
+        registerMaterial(DEFAULT_STRING, DefaultMaterial.class);
     }
 
-    public void registerMaterial(String name, Class<? extends Material> materialClass) {
+    public void registerMaterial(String name, Class<? extends Material<? extends Shader>> materialClass) {
         try {
             final var material = materialClass
                     .getConstructor(Shaders.class, Textures.class)
@@ -50,7 +48,7 @@ public class Materials extends AbstractManager<Material> {
      * @param name material name
      * @return the material
      */
-    public Material getMaterial(String name) {
+    public Material<? extends Shader> getMaterial(String name) {
         return resources.getOrDefault(name, resources.get(DEFAULT_STRING));
     }
 

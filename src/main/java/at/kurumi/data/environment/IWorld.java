@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public interface IWorld {
 
-    int CHUNK_EDGE_LENGTH = 64;
+    int CHUNK_EDGE_LENGTH = 16;
     int CHUNK_HEIGHT_LIMIT = 4096;
     long MAX_CHUNKS_IN_DIRECTION = 549_755_813_887L;
 
