@@ -2,14 +2,17 @@ package at.kurumi.graphics;
 
 import at.kurumi.data.managers.*;
 import at.kurumi.data.providers.MeshLoader;
+import at.kurumi.graphics.gui.HealthBar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.lwjgl.opengl.GL11C;
 
 import static at.kurumi.ClientStart.DEFAULT_STRING;
 
 /**
- * Home for the Display and rendering thread.
+ * All things that render onto the {@link Display}.
  */
 public class Graphics {
 
@@ -24,6 +27,11 @@ public class Graphics {
 
     private final GUI gui;
 
+    private float fieldOfView = (float) Math.toRadians(60.0);
+    private float near = 0.01f;
+    private float far = 100.0f;
+    private Matrix4fc projection;
+
     public Graphics(Display display) throws GraphicsException {
         this.display = display;
 
@@ -35,6 +43,13 @@ public class Graphics {
         gui = new GUI(meshes, materials, shaders);
         gui.registerHealthbarProvider(DEFAULT_STRING, HealthBar.class);
         gui.activateHealthBar(DEFAULT_STRING);
+
+        projection = computeProjection();
+    }
+
+    private Matrix4fc computeProjection() {
+        final var aspectRatio = (float) (display.getWidth() / display.getHeight());
+        return new Matrix4f().perspective(fieldOfView, aspectRatio, near, far);
     }
 
     public void close() {
@@ -46,16 +61,16 @@ public class Graphics {
     }
 
     public void render() {
+        // Prepare
+        GL11C.glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
+        GL11C.glClear(GL11C.GL_COLOR_BUFFER_BIT | GL11C.GL_DEPTH_BUFFER_BIT);
         if(display.isResized()) {
             GL11C.glViewport(0, 0, display.getWidth(), display.getHeight());
+            projection = computeProjection();
             display.setResized(false);
         }
 
         setWorldRenderState();
-
-        // Prepare
-        GL11C.glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
-        GL11C.glClear(GL11C.GL_COLOR_BUFFER_BIT | GL11C.GL_DEPTH_BUFFER_BIT);
 
         // GUI
         gui.renderHealthBar();

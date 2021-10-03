@@ -1,6 +1,7 @@
-package at.kurumi.graphics;
+package at.kurumi.graphics.gui;
 
 import at.kurumi.data.resources.Shader;
+import at.kurumi.graphics.GraphicsException;
 import org.joml.Matrix4fc;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package at.kurumi.graphics;
+package at.kurumi.graphics.gui;
 
 import at.kurumi.data.managers.Materials;
 import at.kurumi.data.managers.Meshes;

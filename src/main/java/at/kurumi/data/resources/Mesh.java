@@ -1,5 +1,9 @@
 package at.kurumi.data.resources;
 
+import org.lwjgl.opengl.GL15C;
+import org.lwjgl.opengl.GL20C;
+import org.lwjgl.opengl.GL30C;
+
 /**
  * <h2>Represents a single mesh</h2>
  * <p>
@@ -32,8 +36,34 @@ public class Mesh implements IManagedResource {
         return vertexBufferObjectIDs;
     }
 
+    /**
+     * Binds the Mesh's VAO and activates all the necessary VBOs/EBOs.
+     */
+    public void bind() {
+        GL30C.glBindVertexArray(vaoId);
+        for(int i = 0; i < vertexBufferObjectIDs.length; i++) {
+            GL20C.glEnableVertexAttribArray(i);
+        }
+    }
+
+    /**
+     * Unbinds the Mesh's VAO and deactivates all the necessary VBOs/EBOs.
+     */
+    public void unbind() {
+        for(int i = vertexBufferObjectIDs.length - 1; i >= 0; i--) {
+            GL20C.glDisableVertexAttribArray(i);
+        }
+        GL30C.glBindVertexArray(vaoId);
+    }
+
     @Override
     public void dispose() {
-        // TODO implement Mesh dispose code
+        for(int vboId : vertexBufferObjectIDs) {
+            GL30C.glDisableVertexAttribArray(vboId);
+            GL20C.glBindBuffer(GL20C.GL_ARRAY_BUFFER, 0);
+            GL15C.glDeleteBuffers(vboId);
+        }
+        GL30C.glBindVertexArray(0);
+        GL30C.glDeleteVertexArrays(vaoId);
     }
 }

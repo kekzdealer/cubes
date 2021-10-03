@@ -7,8 +7,6 @@ import org.lwjgl.opengl.GL20C;
 import org.lwjgl.opengl.GL30C;
 import org.lwjgl.system.MemoryUtil;
 
-import java.nio.FloatBuffer;
-
 /**
  * Provider class for {@link Mesh} objects.
  *
@@ -68,8 +66,8 @@ public class MeshLoader {
         final int vertexVBOId = 0;
         final int uvVBOId = 1;
         GL30C.glBindVertexArray(vaoId);
-        storeDataInAttributeList(vertexVBOId, 3, vertexFloatBuffer);
-        storeDataInAttributeList(uvVBOId, 2, uvFloatBuffer);
+        storeDataInVBO(vertexVBOId, 3, vertices);
+        storeDataInVBO(uvVBOId, 2, uvs);
         GL30C.glBindVertexArray(0);
 
         return new Mesh(vaoId, vertices.length / 3, vertexVBOId, uvVBOId);
@@ -143,35 +141,43 @@ public class MeshLoader {
                 1.0f, 1.0f,
         };
 
-        // Store in FloatBuffer, outside the heap in native memory
-        final var vertexFloatBuffer = MemoryUtil.memAllocFloat(vertices.length);
-        vertexFloatBuffer.put(vertices);
-        vertexFloatBuffer.flip();
-        final var indexFloatBuffer = MemoryUtil.memAllocInt(indices.length);
-        indexFloatBuffer.put(indices);
-        indexFloatBuffer.flip();
-        final var uvFloatBuffer = MemoryUtil.memAllocFloat(uvs.length);
-        uvFloatBuffer.put(uvs);
-        uvFloatBuffer.flip();
-
         // Create VAO, fill some EBOs and put them in the VAO
         final int vaoId = GL30C.glGenVertexArrays();
         final int vertexVBOId = 0;
-        final int uvVBOId = 1;
+        final int indexEBOId = 1;
+        final int uvVBOId = 2;
         GL30C.glBindVertexArray(vaoId);
-        storeDataInAttributeList(vertexVBOId, 3, vertexFloatBuffer);
-//        storeDataInAttributeList(uvVBOId, 2, uvFloatBuffer);
-        storeDataInAttributeList(uvVBOId, 2, uvFloatBuffer);
+        storeDataInVBO(vertexVBOId, 3, vertices);
+        storeDataInEBO(indexEBOId, 2, indices);
+        storeDataInVBO(uvVBOId, 2, uvs);
         GL30C.glBindVertexArray(0);
 
         return new Mesh(vaoId, vertices.length / 3, vertexVBOId, uvVBOId);
     }
 
-    private void storeDataInAttributeList(int attributeID, int dimensions, FloatBuffer data) {
-        final int vboID = GL15C.glGenBuffers();
-        GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, vboID);
-        GL15C.glBufferData(GL15C.GL_ARRAY_BUFFER, data, GL15C.GL_STATIC_DRAW);
-        GL20C.glVertexAttribPointer(attributeID, dimensions, GL11C.GL_FLOAT, false, 0, 0);
+    private void storeDataInVBO(int attributeId, int dimensions, float[] data) {
+        final int vboId = GL15C.glGenBuffers();
+        GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, vboId);
+
+        final var floatBuffer = MemoryUtil.memAllocFloat(data.length);
+        floatBuffer.put(data).flip();
+        GL15C.glBufferData(GL15C.GL_ARRAY_BUFFER, floatBuffer, GL15C.GL_STATIC_DRAW);
+        MemoryUtil.memFree(floatBuffer);
+
+        GL20C.glEnableVertexAttribArray(attributeId);
+        GL20C.glVertexAttribPointer(attributeId, dimensions, GL11C.GL_FLOAT, false, 0, 0);
+        GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, 0);
+    }
+
+    private void storeDataInEBO(int attributeId, int dimensions, int[] data) {
+        final int eboId = GL15C.glGenBuffers();
+        GL15C.glBindBuffer(GL15C.GL_ELEMENT_ARRAY_BUFFER, eboId);
+
+        final var intBuffer = MemoryUtil.memAllocInt(data.length);
+        intBuffer.put(data).flip();
+        GL15C.glBufferData(GL15C.GL_ELEMENT_ARRAY_BUFFER, intBuffer, GL15C.GL_STATIC_DRAW);
+        MemoryUtil.memFree(intBuffer);
+
         GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, 0);
     }
 }

@@ -1,7 +1,7 @@
 package at.kurumi.data.managers;
 
 import at.kurumi.graphics.GraphicsException;
-import at.kurumi.graphics.AbstractHealthBar;
+import at.kurumi.graphics.gui.AbstractHealthBar;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

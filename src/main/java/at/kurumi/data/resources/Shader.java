@@ -8,6 +8,7 @@ import org.joml.Vector2fc;
 import org.joml.Vector3fc;
 import org.joml.Vector4fc;
 import org.lwjgl.opengl.GL20C;
+import org.lwjgl.system.MemoryStack;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -153,29 +154,51 @@ public abstract class Shader implements IManagedResource {
     }
 
     protected void loadInt(int location, int value) {
-        GL20C.glUniform1i(location, value);
+        try (final var stack = MemoryStack.stackPush()) {
+            final var buffer = stack.mallocInt(1);
+            buffer.put(value);
+            GL20C.glUniform1iv(location, buffer);
+        }
     }
 
     protected void loadFloat(int location, float value) {
-        GL20C.glUniform1f(location, value);
+        try (final var stack = MemoryStack.stackPush()) {
+            final var buffer = stack.mallocFloat(1);
+            buffer.put(value);
+            GL20C.glUniform1fv(location, buffer);
+        }
     }
 
     protected void loadVector2f(int location, Vector2fc vector) {
-        GL20C.glUniform2f(location, vector.x(), vector.y());
+        try (final var stack = MemoryStack.stackPush()) {
+            final var buffer = stack.mallocFloat(2);
+            vector.get(buffer);
+            GL20C.glUniform2fv(location, buffer);
+        }
     }
 
     protected void loadVector3f(int location, Vector3fc vector) {
-        GL20C.glUniform3f(location, vector.x(), vector.y(), vector.z());
+        try (final var stack = MemoryStack.stackPush()) {
+            final var buffer = stack.mallocFloat(3);
+            vector.get(buffer);
+            GL20C.glUniform3fv(location, buffer);
+        }
     }
 
     protected void loadVector4f(int location, Vector4fc vector) {
-        GL20C.glUniform4f(location, vector.x(), vector.y(), vector.z(), vector.w());
+        try (final var stack = MemoryStack.stackPush()) {
+            final var buffer = stack.mallocFloat(4);
+            vector.get(buffer);
+            GL20C.glUniform4fv(location, buffer);
+        }
     }
 
     protected void loadMatrix4f(int location, Matrix4fc matrix) {
-        final float[] matrixBuffer4f = new float[16];
-        matrix.get(matrixBuffer4f);
-        GL20C.glUniformMatrix4fv(location, false, matrixBuffer4f);
+        try (final var stack = MemoryStack.stackPush()) {
+            final var buffer = stack.mallocFloat(16);
+            matrix.get(buffer);
+            GL20C.glUniformMatrix4fv(location, false, buffer);
+        }
     }
 
     @Override

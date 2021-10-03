@@ -1,4 +1,4 @@
-package at.kurumi.graphics;
+package at.kurumi.graphics.gui;
 
 import at.kurumi.data.managers.Materials;
 import at.kurumi.data.managers.Meshes;
@@ -41,9 +41,7 @@ public class HealthBar extends AbstractHealthBar {
         final HealthShader shader = (HealthShader) shaders.getShader(SHADER_NAME);
         shader.start();
 
-        GL30C.glBindVertexArray(mesh.getVaoId());
-        GL20C.glEnableVertexAttribArray(0);
-        GL20C.glEnableVertexAttribArray(1);
+        mesh.bind();
         GL13C.glActiveTexture(GL13C.GL_TEXTURE0);
         GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, materialOutline.getDiffuse().getId());
 
@@ -56,9 +54,7 @@ public class HealthBar extends AbstractHealthBar {
         shader.stop();
 
         GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, 0);
-        GL20C.glDisableVertexAttribArray(0);
-        GL20C.glDisableVertexAttribArray(1);
-        GL30C.glBindVertexArray(0);
+        mesh.unbind();
     }
 
     @Override
