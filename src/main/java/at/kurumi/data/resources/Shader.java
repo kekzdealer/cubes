@@ -1,6 +1,8 @@
 package at.kurumi.data.resources;
 
 import at.kurumi.graphics.GraphicsException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4fc;
 import org.joml.Vector2fc;
 import org.joml.Vector3fc;
@@ -21,6 +23,8 @@ import java.nio.charset.StandardCharsets;
  * @see at.kurumi.data.managers.Shaders
  */
 public abstract class Shader implements IManagedResource {
+
+    private static final Logger LOG = LogManager.getLogger(Shader.class.getSimpleName());
 
     private static final String SHADER_LOC = "/shader/";
     private static final String VERTEX_SHADER_PREFIX = "v_";
@@ -50,20 +54,60 @@ public abstract class Shader implements IManagedResource {
         final var vShaderId = createShader(vShader, GL20C.GL_VERTEX_SHADER);
         final var fShaderId = createShader(fShader, GL20C.GL_FRAGMENT_SHADER);
         // Link shader
-        final var shaderProgramId = GL20C.glCreateProgram();
-        GL20C.glAttachShader(shaderProgramId, vShaderId);
-        GL20C.glAttachShader(shaderProgramId, fShaderId);
+        final var programId = GL20C.glCreateProgram();
+        GL20C.glAttachShader(programId, vShaderId);
+        GL20C.glAttachShader(programId, fShaderId);
 
         bindAttributes();
 
-        GL20C.glLinkProgram(shaderProgramId);
-        if (GL20C.glGetProgrami(shaderProgramId, GL20C.GL_LINK_STATUS) != 1) {
-            System.err.println(GL20C.glGetProgramInfoLog(shaderProgramId));
-            System.exit(1);
+        GL20C.glLinkProgram(programId);
+        if (GL20C.glGetProgrami(programId, GL20C.GL_LINK_STATUS) == 0) {
+            throw new GraphicsException(GL20C.glGetProgramInfoLog(programId));
         }
-        GL20C.glDeleteShader(vShaderId);
-        GL20C.glDeleteShader(fShaderId);
-        return shaderProgramId;
+
+        if(vShaderId != 0) {
+            GL20C.glDetachShader(programId, vShaderId);
+        }
+
+        if(fShaderId != 0) {
+            GL20C.glDetachShader(programId, fShaderId);
+        }
+
+        GL20C.glValidateProgram(programId);
+        if(GL20C.glGetProgrami(programId, GL20C.GL_VALIDATE_STATUS) == 0) {
+            LOG.error("Shader validation: {}", GL20C.glGetProgramInfoLog(programId));
+        }
+
+        return programId;
+    }
+
+    /**
+     * Interface with OpenGL to create and load a shader from its shader source.
+     * <p>
+     * Valid shader types are:
+     *     <ul>
+     *         <li>{@link GL20C#GL_VERTEX_SHADER}</li>
+     *         <li>{@link GL20C#GL_FRAGMENT_SHADER}</li>
+     *     </ul>
+     * </p>
+     *
+     * @param shaderFile shader source code
+     * @param shaderType GL flag specifying shader type
+     * @return handle of the shader program
+     * @throws IOException       thrown if an error occurred while reading the shader
+     * @throws GraphicsException thrown if shader program creation fails
+     */
+    private int createShader(String shaderFile, int shaderType) throws GraphicsException, IOException {
+        final var shaderId = GL20C.glCreateShader(shaderType);
+        if (shaderId == 0) {
+            throw new GraphicsException("Error creating shader");
+        }
+        GL20C.glShaderSource(shaderId, readShaderFile(shaderFile));
+        GL20C.glCompileShader(shaderId);
+        if (GL20C.glGetShaderi(shaderId, GL20C.GL_COMPILE_STATUS) == 0) {
+            throw new GraphicsException(GL20C.glGetShaderInfoLog(shaderId));
+        }
+        return shaderId;
     }
 
     private String readShaderFile(String fileName) throws IOException {
@@ -86,32 +130,6 @@ public abstract class Shader implements IManagedResource {
         } catch (IOException e) {
             throw new IOException("Error while reading shader file: " + fileName);
         }
-    }
-
-    /**
-     * Interface with OpenGL to create and load a shader from its shader source.
-     * <p>
-     * Valid shader types are:
-     *     <ul>
-     *         <li>{@link GL20C#GL_VERTEX_SHADER}</li>
-     *         <li>{@link GL20C#GL_FRAGMENT_SHADER}</li>
-     *     </ul>
-     * </p>
-     *
-     * @param shaderFile shader source code
-     * @param shaderType GL flag specifying shader type
-     * @return handle of the shader program
-     * @throws IOException       thrown if an error occurred while reading the shader
-     * @throws GraphicsException thrown if shader program creation fails
-     */
-    private int createShader(String shaderFile, int shaderType) throws GraphicsException, IOException {
-        final var shaderId = GL20C.glCreateShader(shaderType);
-        GL20C.glShaderSource(shaderId, readShaderFile(shaderFile));
-        GL20C.glCompileShader(shaderId);
-        if (GL20C.glGetShaderi(shaderId, GL20C.GL_COMPILE_STATUS) != 1) {
-            throw new GraphicsException(GL20C.glGetShaderInfoLog(shaderId));
-        }
-        return shaderId;
     }
 
     protected abstract void bindAttributes();
@@ -162,6 +180,9 @@ public abstract class Shader implements IManagedResource {
 
     @Override
     public void dispose() {
-        GL20C.glDeleteProgram(programId);
+        stop();
+        if(programId != 0) {
+            GL20C.glDeleteProgram(programId);
+        }
     }
 }
