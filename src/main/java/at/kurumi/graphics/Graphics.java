@@ -38,15 +38,18 @@ public class Graphics implements Runnable {
 
     @Override
     public void run() {
-        display = new Display(displayWidth, displayHeight, "Cubes")
-                .setErrorPrint(System.err)
-                .setOGLVersion(3, 3)
-                .withCoreProfile()
-                .withForwardCompat()
-                .setResizable(false)
-                .setVisible(false)
-                .setWindowPosition(320, 180)
-                .finishSetup();
+        try {
+            display = new Display(displayWidth, displayHeight, "Cubes")
+                    .setErrorPrint(System.err)
+                    .setOGLVersion(3, 3, true, true)
+                    .setResizable(false)
+                    .setVisible(false)
+                    .setWindowPosition(320, 180)
+                    .finishSetup();
+        } catch (GraphicsException e) {
+            LOG.error("Terminating on graphics error: {}", e.getMessage());
+            onStopCallable.run();
+        }
 
         try (final var meshes = new Meshes(new MeshLoader());
              final var shaders = new Shaders();
@@ -58,7 +61,6 @@ public class Graphics implements Runnable {
             gui.activateHealthBar(DEFAULT_STRING);
 
             doRenderLoop(gui);
-
         } catch (GraphicsException e) {
             LOG.error("Terminating on graphics error: {}", e.getMessage());
             onStopCallable.run();
@@ -87,10 +89,10 @@ public class Graphics implements Runnable {
             gui.renderHealthBar();
 
             // Swap frame buffer content to display
-            display.submitFrame();
+            display.update();
 
             // Check for window close event (x or ESC)
-            if (GLFW.glfwWindowShouldClose(display.getDisplayPointer())) {
+            if (display.windowShouldClose()) {
                 if (this.onStopCallable == null) {
                     throw new IllegalStateException("onStop procedure has not been set");
                 }

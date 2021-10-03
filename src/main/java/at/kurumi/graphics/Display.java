@@ -1,9 +1,9 @@
 package at.kurumi.graphics;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryUtil;
 
 import java.io.PrintStream;
 import java.nio.IntBuffer;
@@ -20,10 +20,12 @@ public class Display {
     private int height;
     private boolean isInitialised = false;
 
-    public Display(int width, int height, String title) {
+    private boolean isResized;
+
+    public Display(int width, int height, String title) throws GraphicsException {
         // Initialize GLFW
         if (!glfwInit()) {
-            throw new RuntimeException("GLFW initialization failed!");
+            throw new GraphicsException("GLFW initialization failed!");
         }
 
         this.width = width;
@@ -32,12 +34,12 @@ public class Display {
         // Create window
         window = glfwCreateWindow(width, height, title, NULL, NULL);
         if (window == NULL) {
-            throw new RuntimeException("Could not create Window");
+            throw new GraphicsException("Could not create Window");
         }
 
         // ESC to close
         GLFW.glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS)
+            if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE)
                 GLFW.glfwSetWindowShouldClose(window, true);
         });
     }
@@ -54,28 +56,32 @@ public class Display {
         return this;
     }
 
-    public Display setOGLVersion(int major, int minor) {
+    /**
+     * Set the minimum OpenGL version, if core profile is enforced, and if forward compatibility is
+     * allowed.
+     * <p>
+     * <h3>Mac OS Hint:</h3>
+     * Forward compat apparently has to be <code>true</code> to work on Mac OS.
+     * </p>
+     *
+     * @param major           OpenGL major version
+     * @param minor           OpenGL minor version
+     * @param usesCoreProfile <code>true</code> to enforce core profile
+     * @param isForwardCompat <code>true</code> to activate forward compatibility
+     * @return this {@link Display} instance
+     */
+    public Display setOGLVersion(int major, int minor, boolean usesCoreProfile, boolean isForwardCompat) {
         if (isInitialised) {
             throw new IllegalStateException("Method has to be called before finishSetup()");
         }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
-        return this;
-    }
-
-    public Display withCoreProfile() {
-        if (isInitialised) {
-            throw new IllegalStateException("Method has to be called before finishSetup()");
+        if (usesCoreProfile) {
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         }
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        return this;
-    }
-
-    public Display withForwardCompat() {
-        if (isInitialised) {
-            throw new IllegalStateException("Method has to be called before finishSetup()");
+        if (isForwardCompat) {
+            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
         }
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
         return this;
     }
 
@@ -84,6 +90,15 @@ public class Display {
             throw new IllegalStateException("Method has to be called before finishSetup()");
         }
         glfwWindowHint(GLFW_RESIZABLE, isResizable ? GLFW_TRUE : GLFW_FALSE);
+
+        if (isResizable) {
+            glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
+                this.width = width;
+                this.height = height;
+                this.isResized = true;
+            });
+        }
+
         return this;
     }
 
@@ -117,11 +132,12 @@ public class Display {
 
         glfwShowWindow(window);
 
-        final IntBuffer w = BufferUtils.createIntBuffer(1);
-        final IntBuffer h = BufferUtils.createIntBuffer(1);
+        final IntBuffer w = MemoryUtil.memAllocInt(1);
+        final IntBuffer h = MemoryUtil.memAllocInt(1);
         glfwGetWindowSize(window, w, h);
         width = w.get(0);
         height = h.get(0);
+
 
         isInitialised = true;
         return this;
@@ -148,7 +164,35 @@ public class Display {
         return height;
     }
 
-    public void submitFrame() {
+    public boolean isResized() {
+        if (!isInitialised()) {
+            throw new IllegalStateException("Display not initialised!");
+        }
+        return isResized;
+    }
+
+    public void setResized(boolean resized) {
+        if (!isInitialised()) {
+            throw new IllegalStateException("Display not initialised!");
+        }
+        isResized = resized;
+    }
+
+    public boolean isKeyPressed(int keyCode) {
+        if (!isInitialised()) {
+            throw new IllegalStateException("Display not initialised!");
+        }
+        return glfwGetKey(window, keyCode) == GLFW_PRESS;
+    }
+
+    public boolean windowShouldClose() {
+        if (!isInitialised()) {
+            throw new IllegalStateException("Display not initialised!");
+        }
+        return glfwWindowShouldClose(window);
+    }
+
+    public void update() {
         if (!isInitialised()) {
             throw new IllegalStateException("Display not initialised!");
         }
