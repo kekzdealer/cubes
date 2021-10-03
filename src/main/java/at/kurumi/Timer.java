@@ -1,5 +1,8 @@
 package at.kurumi;
 
+/**
+ * Engine Time tracker.
+ */
 public class Timer {
 
     private double lastLoopTime;

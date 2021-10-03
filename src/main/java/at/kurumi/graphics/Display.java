@@ -15,6 +15,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Display {
 
     private final long window;
+    private final boolean isVSyncOn;
 
     private int width;
     private int height;
@@ -22,7 +23,7 @@ public class Display {
 
     private boolean isResized;
 
-    public Display(int width, int height, String title) throws GraphicsException {
+    public Display(int width, int height, String title, boolean isVSyncOn) throws GraphicsException {
         // Initialize GLFW
         if (!glfwInit()) {
             throw new GraphicsException("GLFW initialization failed!");
@@ -30,6 +31,7 @@ public class Display {
 
         this.width = width;
         this.height = height;
+        this.isVSyncOn = isVSyncOn;
 
         // Create window
         window = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -127,7 +129,12 @@ public class Display {
     }
 
     public Display finishSetup() {
-        GLFW.glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(window);
+
+        if(isVSyncOn) {
+            glfwSwapInterval(1); // 1 => full refresh rate, 2 => half refresh rate
+        }
+
         GL.createCapabilities();
 
         glfwShowWindow(window);
@@ -148,6 +155,13 @@ public class Display {
             throw new IllegalStateException("Display not initialised!");
         }
         return window;
+    }
+
+    public boolean isVSyncOn() {
+        if (!isInitialised()) {
+            throw new IllegalStateException("Display not initialised!");
+        }
+        return isVSyncOn;
     }
 
     public int getWidth() {
@@ -178,6 +192,8 @@ public class Display {
         isResized = resized;
     }
 
+
+
     public boolean isKeyPressed(int keyCode) {
         if (!isInitialised()) {
             throw new IllegalStateException("Display not initialised!");
@@ -192,11 +208,15 @@ public class Display {
         return glfwWindowShouldClose(window);
     }
 
+    /**
+     * Displays the changed buffer on screen and polls events.
+     */
     public void update() {
         if (!isInitialised()) {
             throw new IllegalStateException("Display not initialised!");
         }
         glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
     public void destroy() {

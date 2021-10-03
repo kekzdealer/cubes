@@ -19,18 +19,13 @@ public final class ClientStart {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    private final Graphics graphics;
-    private final Thread graphicsThread;
-
-    private final IWorld world;
+    private final Engine engine;
+    private final Thread engineThread;
 
     private ClientStart() {
-        graphics = new Graphics(1280, 720);
-        graphicsThread = new Thread(graphics);
-        graphicsThread.setName(Graphics.class.getName());
-
-        world = new DumbWorldProvider();
-        EnvironmentGenerator.generatePlane(world, 0, 1, 0, 10, 10);
+        engine = new Engine();
+        engineThread = new Thread(engine);
+        engineThread.setName(Graphics.class.getName());
     }
 
     public static void main(String[] args) {
@@ -42,13 +37,7 @@ public final class ClientStart {
     }
 
     public void onStart() {
-        graphics.setOnStopCallback(this::onStop);
-        graphics.setTargetFps(1);
-        graphicsThread.start();
+        engineThread.start();
     }
 
-    public void onStop() {
-        graphicsThread.interrupt();
-        graphics.destroy();
-    }
 }
