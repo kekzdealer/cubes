@@ -24,7 +24,7 @@ public class Engine implements Runnable {
     @Override
     public void run() {
         try {
-            display = new Display(1280, 720, "Cubes", true)
+            display = new Display(1280, 720, "Cubes", false)
                     .setWindowPosition(320, 180)
                     .setErrorPrint(System.err)
                     .setOGLVersion(3, 3, true, true)
